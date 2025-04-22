@@ -47,6 +47,8 @@ import {
   editUserSchema,
   updatePasswordSchema,
 } from './schemas/user.schema';
+import { createServer } from 'node:https';
+import fs from 'node:fs';
 
 const userService = new UserService(db);
 const configService = new ConfigService(db, userService);
@@ -182,10 +184,17 @@ const app = new Hono<HonoEnv>()
 
 baseApp.route('/api', app);
 
-serve({
-  fetch: baseApp.fetch,
-  port: env.PORT,
-});
+	serve({
+		
+		fetch: baseApp.fetch,
+		port: env.PORT,
+		createServer: createServer,
+		serverOptions: {
+  			ca: fs.readFileSync(env.CA),
+    			key: fs.readFileSync(env.KEY),
+    			cert: fs.readFileSync(env.CERT),
+    		},
+	});
 
 console.log(`Server started on port ${env.PORT}!`);
 
