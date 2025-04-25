@@ -196,6 +196,10 @@ baseApp.route('/api', app);
     		},
 	});
 
+	const httpApp = new Hono();
+	httpApp.use("/*", serveStatic({ root: "./ssl/.well-known/acme-challenge" }));
+	serve({ port: 3001, fetch: httpApp.fetch })
+
 console.log(`Server started on port ${env.PORT}!`);
 
 export type ApiRoutes = typeof app;
