@@ -183,6 +183,7 @@ const app = new Hono<HonoEnv>()
   .delete('/torrents/:infoHash', isAdmin, (c) => torrentController.deleteTorrent(c));
 
 baseApp.route('/api', app);
+baseApp.use("/.well-known/acme-challenge/*", serveStatic({ root: "./ssl" }));
 
 	serve({
 		
